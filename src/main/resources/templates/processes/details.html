@@ -1,32 +1,504 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Process Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Process Details | Flow</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #a5b4fc;
+            --primary-dark: #4f46e5;
+            --secondary: #94a3b8;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --light: #f8fafc;
+            --dark: #0f172a;
+            --card-bg: rgba(255, 255, 255, 0.96);
+            --border-radius: 12px;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f9fafb 0%, #f1f5f9 100%);
+            color: var(--dark);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 1rem 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: 8px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Main content */
+        main {
+            padding: 3rem 0;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .page-title i {
+            color: var(--primary);
+        }
+
+        /* Detail cards */
+        .detail-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .detail-card-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .detail-card-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.5), transparent);
+        }
+
+        .detail-card-body {
+            padding: 2rem;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 2rem;
+            gap: 2rem;
+        }
+
+        .detail-col {
+            flex: 1;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-label i {
+            font-size: 0.9em;
+        }
+
+        .current-stage {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+            padding: 0.5rem 1.25rem;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        /* Payload items */
+        .payload-item {
+            border-left: 3px solid var(--primary-light);
+            padding-left: 1.25rem;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .payload-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .payload-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+
+        .payload-stage {
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .payload-stage i {
+            color: var(--primary);
+        }
+
+        .payload-date {
+            color: var(--secondary);
+            font-size: 0.85rem;
+        }
+
+        .payload-content {
+            background: rgba(241, 245, 249, 0.5);
+            padding: 1.25rem;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: var(--dark);
+            position: relative;
+        }
+
+        .payload-content::before {
+            content: 'PAYLOAD';
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background: white;
+            padding: 0 5px;
+            font-size: 0.7rem;
+            color: var(--secondary);
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Empty state */
+        .empty-payload {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--secondary);
+            background: rgba(241, 245, 249, 0.5);
+            border-radius: var(--border-radius);
+            border: 1px dashed rgba(0, 0, 0, 0.1);
+        }
+
+        .empty-payload i {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.6;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            text-decoration: none;
+            transition: var(--transition);
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 6px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(255, 255, 255, 0.96);
+            padding: 2rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copyright {
+            color: var(--secondary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            color: var(--secondary);
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .detail-card {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .payload-item {
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .payload-item:nth-child(1) { animation-delay: 0.2s; }
+        .payload-item:nth-child(2) { animation-delay: 0.3s; }
+        .payload-item:nth-child(3) { animation-delay: 0.4s; }
+    </style>
 </head>
 <body>
-<h1>Business Process Details</h1>
-<div>
-    <h2>Process ID: <span th:text="${process.id}"></span></h2>
-    <h3>Current Stage: <span th:text="${currentStage.name}"></span></h3>
-</div>
+<header>
+    <div class="container header-content">
+        <a href="/" class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-project-diagram"></i>
+            </div>
+            <span>Flow</span>
+        </a>
+        <nav>
+            <ul>
+                <li><a th:href="@{/processes}">Processes</a></li>
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
 
-<h3>Payload History:</h3>
-<table>
-    <thead>
-    <tr>
-        <th>Stage</th>
-        <th>Payload</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="payload : ${payloads}">
-        <td th:text="${payload.stage.name}"></td>
-        <td th:text="${payload.payload}"></td>
-    </tr>
-    </tbody>
-</table>
+<main class="container">
+    <div class="page-header">
+        <h1 class="page-title">
+            <i class="fas fa-clipboard-list"></i> Process Details
+        </h1>
+        <a th:href="@{/processes}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
 
-<a href="/processes">Back to List</a>
+    <div class="detail-card">
+        <div class="detail-card-header">
+            <h2>Process #<span th:text="${process.id}"></span></h2>
+        </div>
+        <div class="detail-card-body">
+            <div class="detail-row">
+                <div class="detail-col">
+                    <div class="detail-label">
+                        <i class="fas fa-flag"></i> Current Status
+                    </div>
+                    <span class="current-stage">
+                            <i class="fas fa-check-circle"></i>
+                            <span th:text="${currentStage.name}"></span>
+                        </span>
+                </div>
+                <div class="detail-col">
+                    <div class="detail-label">
+                        <i class="fas fa-calendar-alt"></i> Created On
+                    </div>
+                    <p>January 15, 2023 • 14:32</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <div class="detail-card-header">
+            <h2>Payload History</h2>
+        </div>
+        <div class="detail-card-body">
+            <div th:each="payload : ${payloads}" class="payload-item">
+                <div class="payload-header">
+                        <span class="payload-stage">
+                            <i class="fas fa-code-branch"></i>
+                            <span th:text="${payload.stage.name}"></span>
+                        </span>
+                    <span class="payload-date">2 days ago</span>
+                </div>
+                <div class="payload-content">
+                    <p th:text="${payload.payload}"></p>
+                </div>
+            </div>
+
+            <div th:if="${payloads.empty}" class="empty-payload">
+                <i class="fas fa-code"></i>
+                <h3>No payload history</h3>
+                <p>This process doesn't have any payload data yet</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button class="btn btn-danger">
+            <i class="fas fa-trash-alt"></i> Delete Process
+        </button>
+        <button class="btn btn-primary">
+            <i class="fas fa-edit"></i> Edit Process
+        </button>
+    </div>
+</main>
+
+<footer>
+    <div class="container footer-content">
+        <div class="copyright">
+            &copy; 2023 Flow. All rights reserved.
+        </div>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-github"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </div>
+</footer>
 </body>
 </html>

@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -25,6 +26,10 @@ public class BusinessProcessPayload {
     @OneToOne
     @JoinColumn(name = "business_process_stage_id")
     private BusinessProcessStage stage;
+
+    @ManyToOne
+    @JoinColumn(name = "business_process_id")
+    private BusinessProcess businessProcess;
 
     @Nonnull
     private String payload;

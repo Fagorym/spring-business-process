@@ -16,6 +16,13 @@ public interface BusinessProcessService {
     BusinessProcess getById(Long id);
 
     /**
+     * Сохранить бизнес-процесс.
+     *
+     * @param businessProcess бизнес-процесс
+     */
+    void save(BusinessProcess businessProcess);
+
+    /**
      * Получить все бизнес-процессы.
      *
      * @return список бизнес-процессов.

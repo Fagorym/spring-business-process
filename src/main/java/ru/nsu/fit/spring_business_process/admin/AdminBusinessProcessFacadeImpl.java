@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 import ru.nsu.fit.spring_business_process.entity.BusinessProcess;
 import ru.nsu.fit.spring_business_process.service.BusinessProcessService;

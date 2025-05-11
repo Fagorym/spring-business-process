@@ -1,11 +1,13 @@
 package ru.nsu.fit.spring_business_process.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,8 +33,8 @@ public class BusinessProcess {
     @JoinColumn(name = "business_process_stage_id")
     private BusinessProcessStage stage;
 
-    @OneToMany(mappedBy = "businessProcess", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BusinessProcessPayload> payloads;
+    @OneToMany(mappedBy = "businessProcess", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BusinessProcessPayload> payloads = new ArrayList<>();
 
     @Nonnull
     public Optional<BusinessProcessPayload> getPayload(BusinessProcessStage stage) {
@@ -44,5 +46,6 @@ public class BusinessProcess {
 
     public void addPayload(BusinessProcessPayload businessProcessPayload) {
         payloads.add(businessProcessPayload);
+        businessProcessPayload.setBusinessProcess(this);
     }
 }

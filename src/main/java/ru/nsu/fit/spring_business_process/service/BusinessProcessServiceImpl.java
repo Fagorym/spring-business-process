@@ -21,6 +21,11 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
             .orElseThrow(() -> new IllegalStateException("Business process with id %s was not found".formatted(id)));
     }
 
+    @Override
+    public void save(BusinessProcess businessProcess) {
+        businessProcessRepository.save(businessProcess);
+    }
+
     @Nonnull
     @Override
     public List<BusinessProcess> findAll() {

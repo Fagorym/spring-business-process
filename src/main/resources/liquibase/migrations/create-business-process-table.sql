@@ -1,6 +1,6 @@
 CREATE TABLE business_process_stage(
     id BIGSERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL
 );
 
 
@@ -12,6 +12,7 @@ CREATE TABLE business_process(
 CREATE TABLE business_process_payload(
     id BIGSERIAL PRIMARY KEY,
     business_process_stage_id BIGINT NOT NULL REFERENCES business_process_stage(id),
+    business_process_id BIGINT NOT NULL REFERENCES business_process(id),
     payload TEXT NOT NULL
 );
 
@@ -19,5 +20,5 @@ CREATE TABLE business_process_edge(
     id BIGSERIAL PRIMARY KEY,
     from_stage_id BIGINT NOT NULL REFERENCES business_process_stage(id),
     to_stage_id BIGINT NOT NULL REFERENCES business_process_stage(id),
-    result TEXT NOT NULL,
+    result TEXT NOT NULL
 );

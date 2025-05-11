@@ -106,6 +106,8 @@ public class QueueConfiguration {
                 queueService.registerQueue(consumer);
             });
 
+        queueService.start();
+
         return queueService;
     }
 

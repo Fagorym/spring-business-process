@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.nsu.fit.spring_business_process.entity.BusinessProcess;
 import ru.nsu.fit.spring_business_process.entity.BusinessProcessPayload;
 import ru.nsu.fit.spring_business_process.entity.BusinessProcessResultData;
@@ -32,6 +33,7 @@ public class BusinessProcessExecutor implements QueueProcessingService<StageExec
     @SneakyThrows
     @Override
     public TaskExecutionResult process(StageExecutorPayload payload) {
+        log.info("Getting business process {} from db", payload.getBusinessProcessId());
         BusinessProcess businessProcess = businessProcessService.getById(payload.getBusinessProcessId());
 
         StageExecutor matchingExecutor = executors.stream()
@@ -71,6 +73,7 @@ public class BusinessProcessExecutor implements QueueProcessingService<StageExec
                 .setPayload(objectMapper.writeValueAsString(resultData.getNextPayload()))
                 .setStage(nextStage)
         );
+        businessProcessService.save(businessProcess);
         producer.produce(new StageExecutorPayload(businessProcess.getId()));
         return TaskExecutionResult.finish();
     }
