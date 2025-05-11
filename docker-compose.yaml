@@ -6,16 +6,18 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - example_db
+      - db
     environment:
-      - SPRING_DATASOURCE_PASSWORD=example_password
-      - SPRING_DATASOURCE_USERNAME=example_user
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://172.17.0.1:5432/example_db
-  example_db:
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/example_db
+  db:
     image: postgres:latest
+    ports:
+      - "5432:5432"
     environment:
       - POSTGRES_DB=example_db
-      - POSTGRES_USER=example_user
-      - POSTGRES_PASSWORD=example_password
-    labels:
-      - "com.centurylinklabs.watchtower.enable=false"
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./db.sql:/docker-entrypoint-initdb.d/db.sql
