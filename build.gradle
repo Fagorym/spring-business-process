@@ -8,9 +8,14 @@ group = 'ru.nsu.fit'
 version = '0.0.1-SNAPSHOT'
 
 java {
+    sourceCompatibility = "17"
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
 	}
+}
+
+springBoot {
+    mainClass = "org.example.ExampleApplication"
 }
 
 configurations {

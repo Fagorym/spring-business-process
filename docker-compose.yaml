@@ -1,0 +1,21 @@
+version: '3.1'
+services:
+  app:
+    container_name: example-application
+    image: fagorym/example:example
+    ports:
+      - "8080:8080"
+    depends_on:
+      - example_db
+    environment:
+      - SPRING_DATASOURCE_PASSWORD=example_password
+      - SPRING_DATASOURCE_USERNAME=example_user
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://172.17.0.1:5432/example_db
+  example_db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=example_db
+      - POSTGRES_USER=example_user
+      - POSTGRES_PASSWORD=example_password
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
