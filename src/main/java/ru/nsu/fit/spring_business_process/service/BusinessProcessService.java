@@ -1,5 +1,7 @@
 package ru.nsu.fit.spring_business_process.service;
 
+import java.util.List;
+
 import jakarta.annotation.Nonnull;
 import ru.nsu.fit.spring_business_process.entity.BusinessProcess;
 
@@ -12,4 +14,12 @@ public interface BusinessProcessService {
      */
     @Nonnull
     BusinessProcess getById(Long id);
+
+    /**
+     * Получить все бизнес-процессы.
+     *
+     * @return список бизнес-процессов.
+     */
+    @Nonnull
+    List<BusinessProcess> findAll();
 }

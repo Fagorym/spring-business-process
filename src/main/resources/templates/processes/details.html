@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Process Details</title>
+</head>
+<body>
+<h1>Business Process Details</h1>
+<div>
+    <h2>Process ID: <span th:text="${process.id}"></span></h2>
+    <h3>Current Stage: <span th:text="${currentStage.name}"></span></h3>
+</div>
+
+<h3>Payload History:</h3>
+<table>
+    <thead>
+    <tr>
+        <th>Stage</th>
+        <th>Payload</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="payload : ${payloads}">
+        <td th:text="${payload.stage.name}"></td>
+        <td th:text="${payload.payload}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/processes">Back to List</a>
+</body>
+</html>

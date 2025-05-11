@@ -30,6 +30,12 @@ dependencies {
     /* DBQueue */
     implementation("ru.yoomoney.tech:db-queue:15.0.0")
 
+    /* Spring Boot Starter Web */
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    /* Thymeleaf */
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.liquibase:liquibase-core'
 	compileOnly 'org.projectlombok:lombok'
