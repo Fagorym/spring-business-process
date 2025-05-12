@@ -23,10 +23,9 @@ public interface StageExecutor<P> {
     /**
      * Исполнить бизнес-процесс.
      *
-     * @param businessProcess бизнес-процесс
      * @param payload         данные для обработки события
      * @return событие перехода в следующий этап
      */
     @Nonnull
-    BusinessProcessResultData execute(BusinessProcess businessProcess, P payload);
+    BusinessProcessResultData execute(P payload);
 }

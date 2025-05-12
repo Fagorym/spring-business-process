@@ -46,7 +46,6 @@ public class BusinessProcessExecutor implements QueueProcessingService<StageExec
         }
 
         BusinessProcessResultData resultData = matchingExecutor.execute(
-            businessProcess,
             objectMapper.readValue(
                 businessProcess.getPayload(businessProcess.getStage())
                     .map(BusinessProcessPayload::getPayload)
